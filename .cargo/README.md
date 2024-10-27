@@ -27,7 +27,7 @@ cargo add chksum-md5
 
 ## Usage
 
-Use the `chksum` function to calcualate digest of file, directory and so on.
+Use the `chksum` function to calculate digest of file, directory and so on.
 
 ```rust
 use chksum_md5 as md5;

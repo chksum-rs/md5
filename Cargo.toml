@@ -16,16 +16,21 @@ all-features = true
 rustdoc-args = ["--cfg", "docsrs"]
 
 [dependencies]
-chksum-core = "0.0.0"
+chksum-core = "0.1.0"
 chksum-hash-md5 = "0.0.0"
-chksum-reader = { version = "0.0.0", optional = true }
-chksum-writer = { version = "0.0.0", optional = true }
+chksum-reader = { version = "0.1.0", optional = true }
+chksum-writer = { version = "0.1.0", optional = true }
+tokio = { version = "1.37.0", features = ["io-util"], optional = true }
 
 [dev-dependencies]
 assert_fs = { version = "1.0.13", features = ["color-auto"] }
 thiserror = "1.0.51"
+tokio = { version = "1.37.0", features = ["macros", "rt", "rt-multi-thread"] }
 
 [features]
 default = []
 reader = ["chksum-reader"]
 writer = ["chksum-writer"]
+
+# async runtimes
+async-runtime-tokio = ["chksum-core/async-runtime-tokio", "chksum-reader?/async-runtime-tokio", "chksum-writer?/async-runtime-tokio", "tokio"]
