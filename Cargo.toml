@@ -17,7 +17,7 @@ rustdoc-args = ["--cfg", "docsrs"]
 
 [dependencies]
 chksum-core = "0.1.0"
-chksum-hash-md5 = "0.0.0"
+chksum-hash-md5 = "0.0.1"
 chksum-reader = { version = "0.1.0", optional = true }
 chksum-writer = { version = "0.1.0", optional = true }
 tokio = { version = "1.37.0", features = ["io-util"], optional = true }
