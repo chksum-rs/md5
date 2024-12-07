@@ -8,7 +8,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! chksum-md5 = "0.0.0"
+//! chksum-md5 = "0.1.0"
 //! ```
 //!
 //! Alternatively, you can use the [`cargo add`](https://doc.rust-lang.org/cargo/commands/cargo-add.html) subcommand:
@@ -246,7 +246,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! chksum-md5 = { version = "0.0.0", features = ["reader", "writer"] }
+//! chksum-md5 = { version = "0.1.0", features = ["reader", "writer"] }
 //! ```
 //!
 //! Alternatively, you can use the [`cargo add`](https://doc.rust-lang.org/cargo/commands/cargo-add.html) subcommand:
