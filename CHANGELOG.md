@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added async support for Tokio runtime.
 
+### Changed
+
+- Updated MSRV to `1.74.0`.
+
 ## [0.0.0] - 2023-12-21
 
 ### Added
