@@ -45,11 +45,17 @@
 use std::io::Write;
 
 use chksum_writer as writer;
+#[cfg(feature = "async-runtime-tokio")]
+use tokio::io::AsyncWrite;
 
 use crate::MD5;
 
 /// A specialized [`Writer`](writer::Writer) type with the [`MD5`] hash algorithm.
 pub type Writer<W> = writer::Writer<W, MD5>;
+
+#[cfg(feature = "async-runtime-tokio")]
+/// A specialized [`AsyncWriter`](writer::AsyncWriter) type with the [`MD5`] hash algorithm.
+pub type AsyncWriter<R> = writer::AsyncWriter<R, MD5>;
 
 /// Creates new [`Writer`].
 pub fn new(inner: impl Write) -> Writer<impl Write> {
@@ -59,4 +65,16 @@ pub fn new(inner: impl Write) -> Writer<impl Write> {
 /// Creates new [`Writer`] with provided hash.
 pub fn with_hash(inner: impl Write, hash: MD5) -> Writer<impl Write> {
     writer::with_hash(inner, hash)
+}
+
+#[cfg(feature = "async-runtime-tokio")]
+/// Creates new [`AsyncWriter`].
+pub fn async_new(inner: impl AsyncWrite) -> AsyncWriter<impl AsyncWrite> {
+    writer::async_new(inner)
+}
+
+#[cfg(feature = "async-runtime-tokio")]
+/// Creates new [`AsyncWriter`] with provided hash.
+pub fn async_with_hash(inner: impl AsyncWrite, hash: MD5) -> AsyncWriter<impl AsyncWrite> {
+    writer::async_with_hash(inner, hash)
 }

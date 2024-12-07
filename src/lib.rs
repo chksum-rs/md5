@@ -19,7 +19,7 @@
 //!
 //! # Usage
 //!
-//! Use the [`chksum`] function to calcualate digest of file, directory and so on.
+//! Use the [`chksum`] function to calculate digest of file, directory and so on.
 //!
 //! ```rust
 //! # use std::path::Path;
@@ -36,6 +36,30 @@
 //!     "5c71dbb287630d65ca93764c34d9aa0d"
 //! );
 //! # Ok(())
+//! # }
+//! ```
+//!
+//! ## Asynchronous Runtime
+//!
+//! Use the [`async_chksum`] function to calculate digest of file, directory and so on.
+//!
+//! ```rust
+//! # #[cfg(feature = "async-runtime-tokio")]
+//! # {
+//! # use std::path::Path;
+//! # use chksum_md5::Result;
+//! use chksum_md5 as md5;
+//! use tokio::fs::File;
+//!
+//! # async fn wrapper(path: &Path) -> Result<()> {
+//! let file = File::open(path).await?;
+//! let digest = md5::async_chksum(file).await?;
+//! assert_eq!(
+//!     digest.to_hex_lowercase(),
+//!     "5c71dbb287630d65ca93764c34d9aa0d"
+//! );
+//! # Ok(())
+//! # }
 //! # }
 //! ```
 //!
@@ -231,6 +255,12 @@
 //! cargo add chksum-md5 --features reader,writer
 //! ```
 //!
+//! ## Asynchronous Runtime
+//!
+//! * `async-runtime-tokio`: Enables async interface for Tokio runtime.
+//!
+//! By default, neither of these features is enabled.
+//!
 //! # Disclaimer
 //!
 //! The MD5 hash function should be used only for backward compatibility due to security issues.
@@ -252,14 +282,23 @@ pub mod writer;
 use std::fmt::{self, Display, Formatter, LowerHex, UpperHex};
 
 use chksum_core as core;
+#[cfg(feature = "async-runtime-tokio")]
+#[doc(no_inline)]
+pub use chksum_core::AsyncChksumable;
 #[doc(no_inline)]
 pub use chksum_core::{Chksumable, Error, Hash, Hashable, Result};
 #[doc(no_inline)]
 pub use chksum_hash_md5 as hash;
 
+#[cfg(all(feature = "reader", feature = "async-runtime-tokio"))]
+#[doc(inline)]
+pub use crate::reader::AsyncReader;
 #[cfg(feature = "reader")]
 #[doc(inline)]
 pub use crate::reader::Reader;
+#[cfg(all(feature = "writer", feature = "async-runtime-tokio"))]
+#[doc(inline)]
+pub use crate::writer::AsyncWriter;
 #[cfg(feature = "writer")]
 #[doc(inline)]
 pub use crate::writer::Writer;
@@ -339,6 +378,28 @@ pub fn hash(data: impl core::Hashable) -> Digest {
 /// ```
 pub fn chksum(data: impl core::Chksumable) -> Result<Digest> {
     core::chksum::<MD5>(data)
+}
+
+/// Computes the hash of the given input.
+///
+/// # Example
+///
+/// ```rust
+/// use chksum_md5 as md5;
+///
+/// # async fn wrapper() {
+/// let data = b"example data";
+/// if let Ok(digest) = md5::async_chksum(data).await {
+///     assert_eq!(
+///         digest.to_hex_lowercase(),
+///         "5c71dbb287630d65ca93764c34d9aa0d"
+///     );
+/// }
+/// # }
+/// ```
+#[cfg(feature = "async-runtime-tokio")]
+pub async fn async_chksum(data: impl core::AsyncChksumable) -> Result<Digest> {
+    core::async_chksum::<MD5>(data).await
 }
 
 /// The MD5 hash instance.
